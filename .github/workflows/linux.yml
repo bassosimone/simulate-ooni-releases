@@ -22,3 +22,5 @@ jobs:
           gh release create -p $tag $GITHUB_SHA || true
           gh release upload --clobber ooniprobe-linux-amd64
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
