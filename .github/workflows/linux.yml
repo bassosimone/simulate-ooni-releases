@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "main"
+    tags:
+      - "v*"
 jobs:
   build:
     runs-on: "ubuntu-20.04"
@@ -14,4 +16,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: go build -v ./cmd/ooniprobe
+      - run: go build -o ooniprobe-linux-amd64 -v ./cmd/ooniprobe
+      - if: github.event_name == "tag"
+        run: |
+          tag=$(echo $GITHUB_REF | sed 's|refs/tags/||g')
+          gh release create -p $tag $GITHUB_SHA || true
+          gh release upload --clobber ooniprobe-linux-amd64

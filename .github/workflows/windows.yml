@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "main"
+    tags:
+      - "v*"
 jobs:
   build:
     runs-on: "ubuntu-20.04"
@@ -15,4 +17,9 @@ jobs:
         with:
           fetch-depth: 0
       - run: sudo apt install mingw-w64
-      - run: GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -v ./cmd/ooniprobe
+      - run: GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -o ooniprobe-windows-amd64.exe -v ./cmd/ooniprobe
+      - if: github.event_name == "tag"
+        run: |
+          tag=$(echo $GITHUB_REF | sed 's|refs/tags/||g')
+          gh release create -p $tag $GITHUB_SHA || true
+          gh release upload --clobber ooniprobe-windows-amd64.exe
