@@ -17,8 +17,8 @@ jobs:
         with:
           fetch-depth: 0
       - run: go build -o ooniprobe-linux-amd64 -v ./cmd/ooniprobe
-      - if: github.event_name == "tag"
-        run: |
+      - run: |
           tag=$(echo $GITHUB_REF | sed 's|refs/tags/||g')
           gh release create -p $tag $GITHUB_SHA || true
           gh release upload --clobber ooniprobe-linux-amd64
+        if: github.event_name == "tag"
