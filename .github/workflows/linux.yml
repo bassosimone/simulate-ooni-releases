@@ -1,0 +1,17 @@
+# linux builds and publishes ooniprobe for Linux
+name: linux
+on:
+  push:
+    branches:
+      - "main"
+jobs:
+  build:
+    runs-on: "ubuntu-20.04"
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: "1.17.3"
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: go build -v ./cmd/ooniprobe
