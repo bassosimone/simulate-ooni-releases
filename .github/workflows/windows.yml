@@ -20,7 +20,7 @@ jobs:
       - run: GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -o ooniprobe-windows-amd64.exe -v ./cmd/ooniprobe
       - run: |
           tag=$(echo $GITHUB_REF | sed 's|refs/tags/||g')
-          gh release create -p $tag $GITHUB_SHA || true
+          gh release create -p $tag --target $GITHUB_SHA || true
           gh release upload --clobber ooniprobe-windows-amd64.exe
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         env:
